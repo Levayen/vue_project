@@ -1,198 +1,80 @@
 <script setup lang="ts">
-/**
- * 学生管理页面组件
- * 提供学生列表展示、添加、编辑、删除和搜索功能
- */
 import { ref, onMounted, computed } from 'vue'
 import { ElTable, ElTableColumn, ElButton, ElDialog, ElForm, ElFormItem, ElInput, ElSelect, ElOption, ElDatePicker, ElMessage, ElMessageBox } from 'element-plus'
 import { studentApi, classApi, type Student, type ClassInfo } from '@/api'
 
-/**
- * 学生列表数据
- */
 const students = ref<Student[]>([])
-
-/**
- * 班级列表数据，用于下拉选择
- */
 const classes = ref<ClassInfo[]>([])
-
-/**
- * 对话框显示状态
- */
 const dialogVisible = ref(false)
-
-/**
- * 对话框标题
- */
 const dialogTitle = ref('添加学生')
-
-/**
- * 搜索关键词
- */
 const searchKeyword = ref('')
-
-/**
- * 选中的班级ID
- */
 const selectedClassId = ref<number>(0)
-
-/**
- * 表单数据
- */
 const form = ref<Student>({
-  studentNumber: '',
-  name: '',
-  gender: '',
-  birthDate: '',
-  phone: '',
-  email: '',
-  classInfo: undefined
+  studentNumber: '', name: '', gender: '', birthDate: '', phone: '', email: '', classInfo: undefined
 })
 
-/**
- * 表单校验规则
- */
 const rules = {
   studentNumber: [{ required: true, message: '请输入学号', trigger: 'blur' }],
   name: [{ required: true, message: '请输入姓名', trigger: 'blur' }]
 }
 
-/**
- * 根据搜索关键词过滤学生列表
- */
 const filteredStudents = computed(() => {
   if (!searchKeyword.value) return students.value
   return students.value.filter(s => s.name.includes(searchKeyword.value) || s.studentNumber.includes(searchKeyword.value))
 })
 
-/**
- * 加载学生列表数据
- */
 const loadStudents = async () => {
-  try {
-    const res = await studentApi.getAll()
-    students.value = res.data
-  } catch (error) {
-    ElMessage.error('加载学生数据失败')
-  }
+  try { const res = await studentApi.getAll(); students.value = res.data } catch (error) { ElMessage.error('加载学生数据失败') }
 }
-
-/**
- * 加载班级列表数据
- */
 const loadClasses = async () => {
-  try {
-    const res = await classApi.getAll()
-    classes.value = res.data
-  } catch (error) {
-    ElMessage.error('加载班级数据失败')
-  }
+  try { const res = await classApi.getAll(); classes.value = res.data } catch (error) { ElMessage.error('加载班级数据失败') }
 }
 
-/**
- * 打开添加学生对话框
- */
 const openAddDialog = () => {
   dialogTitle.value = '添加学生'
-  form.value = {
-    studentNumber: '',
-    name: '',
-    gender: '',
-    birthDate: '',
-    phone: '',
-    email: '',
-    classInfo: undefined
-  }
+  form.value = { studentNumber: '', name: '', gender: '', birthDate: '', phone: '', email: '', classInfo: undefined }
   selectedClassId.value = 0
   dialogVisible.value = true
 }
 
-/**
- * 打开编辑学生对话框
- * @param student 要编辑的学生对象
- */
 const openEditDialog = (student: Student) => {
   dialogTitle.value = '编辑学生'
-  form.value = {
-    id: student.id,
-    studentNumber: student.studentNumber,
-    name: student.name,
-    gender: student.gender || '',
-    birthDate: student.birthDate || '',
-    phone: student.phone || '',
-    email: student.email || '',
-    classInfo: student.classInfo ? { ...student.classInfo } : undefined
-  }
+  form.value = { id: student.id, studentNumber: student.studentNumber, name: student.name, gender: student.gender || '', birthDate: student.birthDate || '', phone: student.phone || '', email: student.email || '', classInfo: student.classInfo ? { ...student.classInfo } : undefined }
   selectedClassId.value = student.classInfo?.id || 0
   dialogVisible.value = true
 }
 
-/**
- * 保存学生信息（添加或更新）
- */
 const saveStudent = async () => {
   try {
     const requestData = { ...form.value }
-    if (selectedClassId.value && selectedClassId.value !== 0) {
-      requestData.classInfo = { id: selectedClassId.value }
-    } else {
-      delete requestData.classInfo
-    }
-    if (form.value.id) {
-      await studentApi.update(form.value.id, requestData)
-      ElMessage.success('学生信息更新成功')
-    } else {
-      await studentApi.create(requestData)
-      ElMessage.success('学生添加成功')
-    }
-    dialogVisible.value = false
-    loadStudents()
-  } catch (error) {
-    ElMessage.error('操作失败')
-  }
+    if (selectedClassId.value && selectedClassId.value !== 0) { requestData.classInfo = { id: selectedClassId.value } } else { delete requestData.classInfo }
+    if (form.value.id) { await studentApi.update(form.value.id, requestData); ElMessage.success('学生信息更新成功') }
+    else { await studentApi.create(requestData); ElMessage.success('学生添加成功') }
+    dialogVisible.value = false; loadStudents()
+  } catch (error) { ElMessage.error('操作失败') }
 }
 
-/**
- * 删除学生
- * @param id 学生ID
- */
 const deleteStudent = async (id: number) => {
-  try {
-    await ElMessageBox.confirm('确定删除该学生吗？', '提示', { type: 'warning' })
-    await studentApi.delete(id)
-    ElMessage.success('删除成功')
-    loadStudents()
-  } catch (error) {
-    // 用户取消删除
-  }
+  try { await ElMessageBox.confirm('确定删除该学生吗？', '提示', { type: 'warning' }); await studentApi.delete(id); ElMessage.success('删除成功'); loadStudents() } catch (error) {}
 }
 
-/**
- * 组件挂载时加载数据
- */
-onMounted(() => {
-  loadStudents()
-  loadClasses()
-})
+onMounted(() => { loadStudents(); loadClasses() })
 </script>
 
 <template>
   <div class="page-container">
     <div class="page-header">
-      <h2>学生管理</h2>
+      <h2><span class="title-accent">◆</span> 学生管理</h2>
       <div class="header-actions">
         <div class="search-box">
-          <el-icon class="search-icon">
-            <Search />
-          </el-icon>
+          <el-icon class="search-icon"><Search /></el-icon>
           <el-input v-model="searchKeyword" placeholder="搜索姓名或学号" />
         </div>
-        <el-button type="primary" @click="openAddDialog">添加学生</el-button>
+        <el-button type="primary" @click="openAddDialog">+ 添加学生</el-button>
       </div>
     </div>
     
-    <el-table :data="filteredStudents" border>
+    <el-table :data="filteredStudents" class="tech-table">
       <el-table-column prop="id" label="ID" width="60" />
       <el-table-column prop="studentNumber" label="学号" />
       <el-table-column prop="name" label="姓名" />
@@ -209,7 +91,7 @@ onMounted(() => {
       </el-table-column>
     </el-table>
 
-    <el-dialog :title="dialogTitle" v-model="dialogVisible" width="500px">
+    <el-dialog :title="dialogTitle" v-model="dialogVisible" width="500px" append-to-body>
       <el-form :model="form" :rules="rules">
         <el-form-item label="学号" prop="studentNumber">
           <el-input v-model="form.studentNumber" placeholder="请输入学号" />
@@ -248,9 +130,21 @@ onMounted(() => {
 
 <style scoped>
 .page-container {
-  background: #fff;
-  border-radius: 8px;
+  background: rgba(13, 17, 23, 0.8);
+  border: 1px solid rgba(0, 255, 255, 0.1);
+  border-radius: 12px;
   padding: 24px;
+  backdrop-filter: blur(10px);
+  position: relative;
+  overflow: hidden;
+}
+
+.page-container::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(0, 255, 255, 0.5), transparent);
 }
 
 .page-header {
@@ -261,26 +155,25 @@ onMounted(() => {
 }
 
 .page-header h2 {
-  font-size: 20px;
-  font-weight: 600;
+  font-family: 'Orbitron', sans-serif;
+  font-size: 18px;
+  font-weight: 700;
+  color: #e0e6ed;
+  letter-spacing: 2px;
 }
 
-.header-actions {
-  display: flex;
-  gap: 12px;
-  align-items: center;
-}
+.title-accent { color: #00ffff; font-size: 12px; margin-right: 4px; }
+
+.header-actions { display: flex; gap: 12px; align-items: center; }
 
 .search-box {
   display: flex;
   align-items: center;
-  border: 1px solid #dcdfe6;
-  border-radius: 4px;
+  border: 1px solid rgba(0, 255, 255, 0.2);
+  border-radius: 6px;
   padding: 0 12px;
+  background: rgba(0, 255, 255, 0.03);
 }
 
-.search-icon {
-  color: #909399;
-  margin-right: 8px;
-}
+.search-icon { color: rgba(0, 255, 255, 0.5); margin-right: 8px; }
 </style>

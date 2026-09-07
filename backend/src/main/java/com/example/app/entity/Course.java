@@ -1,5 +1,6 @@
 package com.example.app.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 
@@ -9,6 +10,7 @@ import jakarta.validation.constraints.NotBlank;
  */
 @Entity
 @Table(name = "course")
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Course {
     
     /**

@@ -1,0 +1,304 @@
+﻿
+/* ========== 鍏ㄥ眬 Element Plus 鏆楄壊绉戞妧涓婚瑕嗙洊 ========== */
+
+/* 琛ㄦ牸 */
+.el-table {
+  --el-table-bg-color: transparent !important;
+  --el-table-tr-bg-color: transparent !important;
+  --el-table-header-bg-color: rgba(0, 255, 255, 0.05) !important;
+  --el-table-header-text-color: rgba(0, 255, 255, 0.8) !important;
+  --el-table-text-color: #c9d1d9 !important;
+  --el-table-border-color: rgba(0, 255, 255, 0.08) !important;
+  --el-table-row-hover-bg-color: rgba(0, 255, 255, 0.06) !important;
+  --el-table-current-row-bg-color: rgba(0, 255, 255, 0.1) !important;
+  font-family: 'Rajdhani', sans-serif !important;
+  letter-spacing: 0.5px;
+}
+
+.el-table th.el-table__cell {
+  font-weight: 600 !important;
+  text-transform: uppercase;
+  font-size: 12px !important;
+  letter-spacing: 1.5px;
+}
+
+.el-table .el-table__inner-wrapper::before {
+  display: none !important;
+}
+
+.el-table--border .el-table__cell {
+  border-right-color: rgba(0, 255, 255, 0.06) !important;
+}
+
+.el-table--border::after,
+.el-table--group::after,
+.el-table--border::before {
+  background-color: rgba(0, 255, 255, 0.1) !important;
+}
+
+.el-table__empty-text {
+  color: rgba(0, 255, 255, 0.3) !important;
+}
+
+/* 鎸夐挳 - 涓昏 */
+.el-button--primary {
+  --el-button-bg-color: rgba(0, 255, 255, 0.12) !important;
+  --el-button-border-color: rgba(0, 255, 255, 0.4) !important;
+  --el-button-text-color: #00ffff !important;
+  --el-button-hover-bg-color: rgba(0, 255, 255, 0.2) !important;
+  --el-button-hover-border-color: rgba(0, 255, 255, 0.7) !important;
+  --el-button-hover-text-color: #00ffff !important;
+  --el-button-active-bg-color: rgba(0, 255, 255, 0.25) !important;
+  font-family: 'Rajdhani', sans-serif !important;
+  font-weight: 600 !important;
+  letter-spacing: 1px;
+  text-shadow: 0 0 8px rgba(0, 255, 255, 0.3);
+  border-radius: 6px !important;
+}
+
+.el-button--primary:hover {
+  box-shadow: 0 0 15px rgba(0, 255, 255, 0.2), inset 0 0 15px rgba(0, 255, 255, 0.05) !important;
+}
+
+/* 鎸夐挳 - 榛樿 */
+.el-button--default {
+  --el-button-bg-color: rgba(255, 255, 255, 0.05) !important;
+  --el-button-border-color: rgba(255, 255, 255, 0.15) !important;
+  --el-button-text-color: #8b949e !important;
+  --el-button-hover-bg-color: rgba(255, 255, 255, 0.08) !important;
+  --el-button-hover-border-color: rgba(0, 255, 255, 0.3) !important;
+  --el-button-hover-text-color: #00ffff !important;
+  border-radius: 6px !important;
+}
+
+/* 鎸夐挳 - 鍗遍櫓 */
+.el-button--danger {
+  --el-button-bg-color: rgba(255, 50, 80, 0.1) !important;
+  --el-button-border-color: rgba(255, 50, 80, 0.4) !important;
+  --el-button-text-color: #ff4757 !important;
+  --el-button-hover-bg-color: rgba(255, 50, 80, 0.18) !important;
+  --el-button-hover-border-color: rgba(255, 50, 80, 0.6) !important;
+  --el-button-hover-text-color: #ff6b7a !important;
+  border-radius: 6px !important;
+}
+
+.el-button--danger:hover {
+  box-shadow: 0 0 12px rgba(255, 50, 80, 0.2) !important;
+}
+
+/* 鎸夐挳 - 灏忓昂瀵?*/
+.el-button--small {
+  font-size: 12px !important;
+  border-radius: 4px !important;
+}
+
+/* 杈撳叆妗?*/
+.el-input__wrapper {
+  background-color: rgba(0, 255, 255, 0.03) !important;
+  border: 1px solid rgba(0, 255, 255, 0.15) !important;
+  box-shadow: none !important;
+  border-radius: 6px !important;
+}
+
+.el-input__wrapper:hover {
+  border-color: rgba(0, 255, 255, 0.3) !important;
+}
+
+.el-input__wrapper.is-focus {
+  border-color: rgba(0, 255, 255, 0.5) !important;
+  box-shadow: 0 0 8px rgba(0, 255, 255, 0.1) !important;
+}
+
+.el-input__inner {
+  color: #c9d1d9 !important;
+  font-family: 'Rajdhani', sans-serif !important;
+}
+
+.el-input__inner::placeholder {
+  color: rgba(255, 255, 255, 0.25) !important;
+}
+
+/* 閫夋嫨鍣?*/
+.el-select .el-input__wrapper {
+  background-color: rgba(0, 255, 255, 0.03) !important;
+}
+
+.el-select-dropdown {
+  background-color: #0d1117 !important;
+  border: 1px solid rgba(0, 255, 255, 0.15) !important;
+  border-radius: 8px !important;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5) !important;
+}
+
+.el-select-dropdown__item {
+  color: #8b949e !important;
+  font-family: 'Rajdhani', sans-serif !important;
+}
+
+.el-select-dropdown__item.hover,
+.el-select-dropdown__item:hover {
+  background-color: rgba(0, 255, 255, 0.08) !important;
+  color: #00ffff !important;
+}
+
+.el-select-dropdown__item.selected {
+  color: #00ffff !important;
+  font-weight: 600 !important;
+}
+
+/* 瀵硅瘽妗?*/
+.el-dialog {
+  background-color: #0d1117 !important;
+  border: 1px solid rgba(0, 255, 255, 0.15) !important;
+  border-radius: 12px !important;
+  box-shadow: 0 0 40px rgba(0, 255, 255, 0.05), 0 20px 60px rgba(0, 0, 0, 0.5) !important;
+}
+
+.el-dialog__header {
+  border-bottom: 1px solid rgba(0, 255, 255, 0.1) !important;
+  padding: 16px 20px !important;
+}
+
+.el-dialog__title {
+  color: #00ffff !important;
+  font-family: 'Orbitron', sans-serif !important;
+  font-size: 14px !important;
+  letter-spacing: 2px;
+}
+
+.el-dialog__headerbtn .el-dialog__close {
+  color: rgba(255, 255, 255, 0.3) !important;
+}
+
+.el-dialog__headerbtn:hover .el-dialog__close {
+  color: #00ffff !important;
+}
+
+.el-dialog__body {
+  color: #c9d1d9 !important;
+  padding: 20px !important;
+}
+
+.el-dialog__footer {
+  border-top: 1px solid rgba(0, 255, 255, 0.1) !important;
+  padding: 12px 20px !important;
+}
+
+/* 琛ㄥ崟 */
+.el-form-item__label {
+  color: rgba(0, 255, 255, 0.6) !important;
+  font-family: 'Rajdhani', sans-serif !important;
+  font-weight: 500 !important;
+}
+
+/* 鏃ユ湡閫夋嫨鍣?*/
+.el-picker-panel {
+  background-color: #0d1117 !important;
+  border: 1px solid rgba(0, 255, 255, 0.15) !important;
+  border-radius: 8px !important;
+  color: #c9d1d9 !important;
+}
+
+.el-picker-panel__body-wrapper header,
+.el-date-picker__header {
+  color: #c9d1d9 !important;
+  background-color: #0d1117 !important;
+}
+
+.el-picker-panel__icon-btn {
+  color: rgba(0, 255, 255, 0.5) !important;
+}
+
+.el-date-table th {
+  color: rgba(0, 255, 255, 0.5) !important;
+  border-bottom-color: rgba(0, 255, 255, 0.1) !important;
+}
+
+.el-date-table td.available:hover .el-date-table-cell__text {
+  background-color: rgba(0, 255, 255, 0.15) !important;
+}
+
+.el-date-table td.current:not(.disabled) .el-date-table-cell__text {
+  background-color: rgba(0, 255, 255, 0.3) !important;
+  color: #00ffff !important;
+}
+
+.el-date-table td .el-date-table-cell__text {
+  color: #8b949e !important;
+}
+
+.el-date-table td.next-month .el-date-table-cell__text,
+.el-date-table td.prev-month .el-date-table-cell__text {
+  color: rgba(255, 255, 255, 0.15) !important;
+}
+
+/* 鏁板瓧杈撳叆妗?*/
+.el-input-number .el-input-number__decrease,
+.el-input-number .el-input-number__increase {
+  background-color: rgba(0, 255, 255, 0.05) !important;
+  border-color: rgba(0, 255, 255, 0.1) !important;
+  color: rgba(0, 255, 255, 0.5) !important;
+}
+
+.el-input-number .el-input-number__decrease:hover,
+.el-input-number .el-input-number__increase:hover {
+  color: #00ffff !important;
+}
+
+/* 娑堟伅鎻愮ず */
+.el-message {
+  background-color: #0d1117 !important;
+  border-color: rgba(0, 255, 255, 0.2) !important;
+  border-radius: 8px !important;
+}
+
+.el-message--success {
+  border-color: rgba(0, 255, 150, 0.3) !important;
+}
+
+.el-message--error {
+  border-color: rgba(255, 50, 80, 0.3) !important;
+}
+
+/* 纭寮规 */
+.el-message-box {
+  background-color: #0d1117 !important;
+  border: 1px solid rgba(0, 255, 255, 0.15) !important;
+  border-radius: 12px !important;
+}
+
+.el-message-box__title {
+  color: #e0e6ed !important;
+}
+
+.el-message-box__content {
+  color: #8b949e !important;
+}
+
+.el-message-box__header {
+  border-bottom: 1px solid rgba(0, 255, 255, 0.1) !important;
+}
+
+/* 閬僵灞?*/
+.el-overlay {
+  background-color: rgba(0, 0, 0, 0.7) !important;
+  backdrop-filter: blur(4px) !important;
+}
+
+/* 鏂囨湰鍩?*/
+.el-textarea__inner {
+  background-color: rgba(0, 255, 255, 0.03) !important;
+  border: 1px solid rgba(0, 255, 255, 0.15) !important;
+  color: #c9d1d9 !important;
+  box-shadow: none !important;
+  border-radius: 6px !important;
+}
+
+.el-textarea__inner:hover {
+  border-color: rgba(0, 255, 255, 0.3) !important;
+}
+
+.el-textarea__inner:focus {
+  border-color: rgba(0, 255, 255, 0.5) !important;
+  box-shadow: 0 0 8px rgba(0, 255, 255, 0.1) !important;
+}
