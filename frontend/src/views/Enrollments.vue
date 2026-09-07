@@ -45,7 +45,7 @@ onMounted(() => { loadEnrollments(); loadStudents(); loadCourses() })
       <el-table-column label="学分"><template #default="{ row }">{{ row.course?.credits }}</template></el-table-column>
       <el-table-column label="成绩">
         <template #default="{ row }">
-          <el-input-number :model-value="row.grade" :min="0" :max="100" size="small" @change="(val: number) => updateGrade(row.id, val)" />
+          <el-input-number :model-value="row.grade" :min="0" :max="100" size="small" @change="(val: number | undefined) => updateGrade(row.id, val)" />
         </template>
       </el-table-column>
       <el-table-column label="操作" width="100">

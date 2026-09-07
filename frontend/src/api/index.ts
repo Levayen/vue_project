@@ -15,7 +15,7 @@ export interface Student {
   birthDate?: string
   phone?: string
   email?: string
-  classInfo?: { id: number; className: string }
+  classInfo?: { id: number; className?: string }
 }
 
 /**

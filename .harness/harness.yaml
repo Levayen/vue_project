@@ -1,0 +1,102 @@
+# harness.yaml — Harness 机读护栏配置（脚本与 CI 的唯一事实来源）
+version: 1
+
+# 工作区技术栈定义：门禁按改动文件路径自动路由
+stacks:
+  - id: backend
+    path: backend
+    language: java
+    match:
+      - 'backend/**/*.java'
+      - 'backend/pom.xml'
+    rules:
+      - rules/backend-java-alibaba.md
+    gates:
+      local:
+        cmd: 'mvnw.cmd -q -DskipTests compile'   # Windows; 非 Windows 自动用 ./mvnw
+        cwd: backend
+        tool: maven
+      ci:
+        cmd: 'mvn -q test'
+        cwd: backend
+
+  - id: frontend-admin
+    path: frontend
+    language: typescript-vue
+    match:
+      - 'frontend/**/*.ts'
+      - 'frontend/**/*.vue'
+      - 'frontend/package.json'
+    rules:
+      - rules/frontend-vue-alibaba.md
+    gates:
+      local:
+        cmd: 'npx --no-install vue-tsc --noEmit'
+        cwd: frontend
+        requireNodeModules: true   # 缺 node_modules 时 WARN 跳过，不阻断
+      ci:
+        cmd: 'npm run build'
+        cwd: frontend
+
+  - id: web-chess
+    path: .
+    language: javascript-vue
+    match:
+      - 'src/**/*.js'
+      - 'src/**/*.vue'
+      - 'package.json'
+    rules:
+      - rules/frontend-vue-alibaba.md
+    gates:
+      local:
+        cmd: 'npm run lint'
+        cwd: .
+        requireNodeModules: true
+      ci:
+        cmd: 'npm run lint'
+        cwd: .
+
+# 角色分工
+roles:
+  planner: agents/planner.md
+  developer: agents/developer.md
+  reviewer: agents/reviewer.md
+
+# 状态驱动变更流
+workflow:
+  changeDir: .harness/changes
+  template: workflow/change-template.md
+  states:
+    - proposed      # Planner 已建单，待开发
+    - in-progress   # Developer 开发中
+    - reviewing     # 待/在评审
+    - done          # 评审通过 + CI 全绿
+  initialState: proposed
+
+# 提交规范（Conventional Commits，与 rules/git-commit.md 对应）
+commit:
+  convention: conventional
+  msgRegex: '^(feat|fix|docs|style|refactor|perf|test|build|ci|chore|revert)(\([^)]+\))?: .+'
+  maxSubjectLength: 72
+  ignoreMerge: true
+
+# 质量漏斗：本地快门禁 → CI 全量门禁 → 评审清单
+qualityGates:
+  - id: local-compile-lint
+    stage: pre-commit
+    blocking: true
+    runner: scripts/gate.mjs
+  - id: commit-msg
+    stage: commit-msg
+    blocking: true
+    runner: scripts/gate.mjs
+  - id: ci-backend-test
+    stage: ci
+    blocking: true
+  - id: ci-frontend-build
+    stage: ci
+    blocking: true
+  - id: reviewer-checklist
+    stage: review
+    blocking: true
+    checklist: agents/reviewer.md

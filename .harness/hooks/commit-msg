@@ -1,0 +1,3 @@
+#!/bin/sh
+# Harness commit-msg：Conventional Commits 校验
+exec node "$(git rev-parse --show-toplevel)/.harness/scripts/gate.mjs" commit-msg "$1"
