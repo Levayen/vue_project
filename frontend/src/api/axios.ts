@@ -1,8 +1,10 @@
 /**
  * Axios 实例配置
- * 统一配置请求基础路径和超时时间
+ * 统一配置请求基础路径、超时时间，以及认证拦截器（SPEC-identity）
  */
 import axios from 'axios'
+
+const TOKEN_KEY = 'exam_sys_token'
 
 /**
  * 创建 Axios 实例
@@ -15,12 +17,27 @@ const instance = axios.create({
 })
 
 /**
+ * 请求拦截器：自动携带 Authorization 头
+ */
+instance.interceptors.request.use(config => {
+  const token = localStorage.getItem(TOKEN_KEY)
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`
+  }
+  return config
+})
+
+/**
  * 响应拦截器
- * 处理响应数据和错误
+ * 401（未登录/令牌失效）时清除 token 并跳转登录页；其余错误继续抛出
  */
 instance.interceptors.response.use(
   response => response,
   error => {
+    if (error.response?.status === 401 && window.location.pathname !== '/login') {
+      localStorage.removeItem(TOKEN_KEY)
+      window.location.href = '/login'
+    }
     console.error('API Error:', error)
     return Promise.reject(error)
   }

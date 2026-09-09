@@ -1,20 +1,51 @@
 <script setup lang="ts">
 /**
  * 侧边栏导航组件
- * 显示系统菜单和导航链接
+ * 显示系统菜单、当前用户与退出登录（SPEC-identity）
  */
-import { useRoute } from 'vue-router'
+import { computed } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
+import { ElMessageBox } from 'element-plus'
+import { useAuth } from '@/stores/auth'
 
 const route = useRoute()
+const router = useRouter()
+const { currentUser, logout } = useAuth()
 
-const menuItems = [
-  { name: '学生管理', path: '/students', icon: 'User' },
-  { name: '班级管理', path: '/classes', icon: 'Building' },
-  { name: '课程管理', path: '/courses', icon: 'BookOpen' },
-  { name: '选课管理', path: '/enrollments', icon: 'GraduationCap' }
+const allMenuItems = [
+  { name: '学生管理', path: '/students', icon: 'User', roles: ['ADMIN', 'TEACHER'] },
+  { name: '班级管理', path: '/classes', icon: 'Building', roles: ['ADMIN', 'TEACHER'] },
+  { name: '课程管理', path: '/courses', icon: 'BookOpen', roles: ['ADMIN', 'TEACHER'] },
+  { name: '题库管理', path: '/questions', icon: 'Notebook', roles: ['ADMIN', 'TEACHER'] },
+  { name: '试卷管理', path: '/papers', icon: 'Files', roles: ['ADMIN', 'TEACHER'] },
+  { name: '考试管理', path: '/exams', icon: 'Calendar', roles: ['ADMIN', 'TEACHER'] },
+  { name: '阅卷工作台', path: '/reviews', icon: 'DocumentChecked', roles: ['ADMIN', 'TEACHER'] },
+  { name: '选课管理', path: '/enrollments', icon: 'GraduationCap', roles: ['ADMIN', 'TEACHER'] },
+  { name: '我的考试', path: '/student/exams', icon: 'EditPen', roles: ['STUDENT'] },
+  { name: '我的成绩', path: '/student/scores', icon: 'TrophyBase', roles: ['STUDENT'] },
+  { name: '错题本', path: '/student/wrong-book', icon: 'Collection', roles: ['STUDENT'] }
 ]
 
+const menuItems = computed(() =>
+  allMenuItems.filter(item => currentUser.value && item.roles.includes(currentUser.value.role))
+)
+
+const roleLabel = computed(() => {
+  const map: Record<string, string> = { ADMIN: '管理员', TEACHER: '教师', STUDENT: '学生' }
+  return currentUser.value ? map[currentUser.value.role] : ''
+})
+
 const isActive = (path: string) => route.path === path
+
+async function handleLogout() {
+  await ElMessageBox.confirm('确定要退出登录吗？', '提示', {
+    confirmButtonText: '退出',
+    cancelButtonText: '取消',
+    type: 'warning'
+  })
+  logout()
+  await router.push('/login')
+}
 </script>
 
 <template>
@@ -41,7 +72,16 @@ const isActive = (path: string) => route.path === path
     </nav>
     <div class="sidebar-footer">
       <div class="status-line"></div>
-      <span class="status-text">SYSTEM ONLINE</span>
+      <div class="user-box">
+        <el-icon :size="16"><UserFilled /></el-icon>
+        <div class="user-meta">
+          <span class="user-name">{{ currentUser?.username }}</span>
+          <span class="user-role">{{ roleLabel }}</span>
+        </div>
+        <el-button link class="logout-btn" title="退出登录" @click="handleLogout">
+          <el-icon :size="16"><SwitchButton /></el-icon>
+        </el-button>
+      </div>
     </div>
   </aside>
 </template>
@@ -182,5 +222,40 @@ const isActive = (path: string) => route.path === path
   font-size: 10px;
   color: rgba(0, 255, 255, 0.4);
   letter-spacing: 3px;
+}
+
+.user-box {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: rgba(0, 255, 255, 0.7);
+}
+
+.user-meta {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.user-name {
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.85);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.user-role {
+  font-size: 11px;
+  color: rgba(0, 255, 255, 0.5);
+}
+
+.logout-btn {
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.logout-btn:hover {
+  color: #ff6b6b;
 }
 </style>

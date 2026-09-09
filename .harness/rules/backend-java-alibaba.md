@@ -44,6 +44,13 @@
 - 【强制】不用 `System.out.println`；日志用 SLF4J 占位符：`log.info("save student id={}", id)`。
 - 【强制】参数校验用 `@Valid` + `jakarta.validation` 注解；业务异常用统一异常处理器
   （`GlobalExceptionHandler`）转换为标准错误响应。
+- 【强制】批量写入操作（组卷、批量判分等）必须先全量校验全部条目合法性，
+  校验通过后再统一落库；禁止逐条保存导致失败时产生脏数据。
+- 【强制】字符串归一化函数（答案比对、关键词匹配等）的流水线末尾必须以
+  `trim()` 收尾，避免全角空格转半角后残留空白导致匹配失败。
+- 【强制】解析 text 字段中存储的 JSON（如 `violationsJson`、`answersJson` 快照）
+  必须 try-catch 容错：单条记录解析失败时跳过该条（返回空/默认值），不得让脏数据
+  导致整个接口 500；catch 中记录 warn 日志但不中断主流程。
 - 【推荐】对外部调用（HTTP/DB）的异常要分类处理并可重试/降级。
 
 ## 8. MySQL 与 ORM（JPA）
@@ -51,6 +58,11 @@
 - 【强制】字段禁止 `is_` 前缀；主键 `bigint`；表必备 `create_time`、`update_time`。
 - 【强制】禁止 `SELECT *`（JPA 避免无关字段全量抓取）；列表查询必须分页。
 - 【强制】禁止在 Repository 层拼接业务逻辑；复杂查询用 `@Query` 并参数绑定，杜绝字符串拼接 SQL。
+- 【强制】`IDENTITY` 主键的主从实体写入：主实体必须先 `save()` 拿到持久化实例，
+  再用该实例构建子实体的关联字段后批量保存；否则子实体外键指向临时引用，抛
+  `TransientPropertyValueException`。
+- 【强制】Spring Data JPA 派生查询命名：普通列直接用驼峰属性名（`existsByQuestionId`），
+  下划线 `_` 仅用于拆解关联属性路径（`existsByQuestion_Id` 表示 `question.id`）。
 - 【推荐】索引命名：主键 `pk_`、唯一 `uk_`、普通 `idx_`；varchar 代替 char。
 - 【推荐】避免 N+1：关联查询用 fetch join / 实体图。
 
@@ -58,4 +70,9 @@
 - 【强制】分层：`controller`（参数/鉴权/编排）→ `service`（业务）→ `repository`（持久化），
   禁止跨层调用（Controller 直接注入 Repository）。
 - 【强制】Controller 方法返回统一结构；入参用 DTO + 校验注解，不用实体直接接收。
+- 【强制】模块间引用解耦用 Port 接口 + 默认桩实现：默认桩直接 `@Component` 注册
+  （禁止加 `@ConditionalOnMissingBean`，否则自身不被注册导致 Bean 缺失），
+  真实实现用 `@Primary` 覆盖。
+- 【强制】涉及时间窗口的业务（考试倒计时、超时校验等）必须以服务端时间为准，
+  前端计时仅作展示；交卷/暂存接口必须强制校验服务端 deadline。
 - 【推荐】配置项走 `application.properties`/`@ConfigurationProperties`，环境差异用 profile。

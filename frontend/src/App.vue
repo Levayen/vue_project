@@ -1,19 +1,21 @@
 <script setup lang="ts">
 /**
  * 应用根组件
- * 负责整体布局，包含侧边栏导航和主内容区域
+ * 负责整体布局，包含侧边栏导航和主内容区域；登录页等公共页全屏无侧边栏
  */
-import { RouterView } from 'vue-router'
+import { RouterView, useRoute } from 'vue-router'
 import Sidebar from '@/components/Sidebar.vue'
+
+const route = useRoute()
 </script>
 
 <template>
   <div class="app-container">
     <div class="bg-grid"></div>
-    <!-- 侧边栏导航组件 -->
-    <Sidebar />
+    <!-- 侧边栏导航组件（公共页不显示） -->
+    <Sidebar v-if="!route.meta.public" />
     <!-- 主内容区域，显示路由匹配的页面组件 -->
-    <main class="main-content">
+    <main class="main-content" :class="{ 'main-content--full': route.meta.public }">
       <RouterView />
     </main>
   </div>
@@ -47,5 +49,9 @@ import Sidebar from '@/components/Sidebar.vue'
   overflow-y: auto;
   position: relative;
   z-index: 1;
+}
+
+.main-content--full {
+  padding: 0;
 }
 </style>

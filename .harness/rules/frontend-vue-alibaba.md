@@ -14,12 +14,19 @@
 ## 2. 组合式 API 与 TS
 - 【强制】统一 `<script setup lang="ts">`；逻辑复用抽 composables，文件名/函数名 `useXxx`。
 - 【强制】响应式优先 `ref`/`computed`；props/emit 用类型声明，禁止 `any` 泛滥（接口数据定义在 `src/api` 类型层）。
+- 【强制】组件内 `setInterval`/`setTimeout` 必须保存返回的句柄并在 `onBeforeUnmount` 中
+  `clearInterval`/`clearTimeout`，禁止组件卸载后定时器仍运行（泄漏、回调访问已卸载 ref）。
+  弹窗（el-dialog）内的轮询定时器还需在 dialog 的 `@closed` 中清理；封装 `start/stop`
+  成对调用，且 start 时先 stop 旧定时器，防止重复开启。
 - 【推荐】组件 ≤200 行；超过则拆 composable/子组件。
 
 ## 3. 接口与数据
 - 【强制】所有 HTTP 请求走 `src/api` 层（axios 实例 + 拦截器），组件内不直接写 axios/fetch。
 - 【强制】禁止硬编码 baseURL；接口返回结构用 TS 类型标注。
 - 【强制】用户输入必填项有校验（表单 rules）；删除等危险操作有二次确认。
+- 【强制】选项类答案编码（单选/多选）转展示文本时，必须用 `code.match(/[A-Za-z]/g)`
+  逐字母提取；禁止 `split('')`（逗号会混入）或 `split(/[^A-Za-z]+/)`（无分隔符的 `AC` 拆不开）。
+- 【强制】`src/api/*.ts` 中 interface 的字段必须与后端 DTO 完全对应，新增字段需同步两端。
 - 【推荐】列表请求带 loading 与错误提示（ElMessage），失败不白屏。
 
 ## 4. 命名与目录

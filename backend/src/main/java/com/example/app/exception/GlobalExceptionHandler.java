@@ -34,6 +34,20 @@ public class GlobalExceptionHandler {
     }
     
     /**
+     * 处理业务异常
+     * 按异常携带的状态码返回标准化 {code, message} 响应
+     * @param ex 业务异常
+     * @return 包含状态码与消息的响应
+     */
+    @ExceptionHandler(BusinessException.class)
+    public ResponseEntity<Map<String, Object>> handleBusinessException(BusinessException ex) {
+        Map<String, Object> response = new HashMap<>();
+        response.put("code", ex.getStatus().value());
+        response.put("message", ex.getMessage());
+        return ResponseEntity.status(ex.getStatus()).body(response);
+    }
+
+    /**
      * 处理运行时异常
      * 捕获所有未处理的运行时异常
      * @param ex 运行时异常
