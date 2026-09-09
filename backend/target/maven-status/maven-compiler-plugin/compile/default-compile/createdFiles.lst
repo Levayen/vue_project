@@ -32,6 +32,7 @@ com\example\app\controller\TeacherReviewController.class
 com\example\app\repository\PaperQuestionRepository.class
 com\example\app\security\UserContext$CurrentUser.class
 com\example\app\controller\CourseController.class
+com\example\app\dto\ChangePasswordRequest.class
 com\example\app\dto\LoginResponse.class
 com\example\app\repository\ExamRecordRepository.class
 com\example\app\service\ReviewService.class

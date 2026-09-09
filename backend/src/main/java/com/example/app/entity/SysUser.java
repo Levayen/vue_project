@@ -54,6 +54,12 @@ public class SysUser {
     private Boolean enabled = true;
 
     /**
+     * 是否必须在下次登录时修改密码（种子账号初始为 true）
+     */
+    @Column(name = "must_change_password", nullable = false)
+    private Boolean mustChangePassword = false;
+
+    /**
      * 创建时间
      */
     @Column(name = "create_time")
@@ -72,6 +78,9 @@ public class SysUser {
         this.updateTime = now;
         if (this.enabled == null) {
             this.enabled = true;
+        }
+        if (this.mustChangePassword == null) {
+            this.mustChangePassword = false;
         }
     }
 
@@ -128,6 +137,14 @@ public class SysUser {
 
     public void setEnabled(Boolean enabled) {
         this.enabled = enabled;
+    }
+
+    public Boolean getMustChangePassword() {
+        return mustChangePassword;
+    }
+
+    public void setMustChangePassword(Boolean mustChangePassword) {
+        this.mustChangePassword = mustChangePassword;
     }
 
     public LocalDateTime getCreateTime() {

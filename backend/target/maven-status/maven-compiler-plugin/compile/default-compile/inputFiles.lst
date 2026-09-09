@@ -47,6 +47,7 @@ E:\test\vue_project\backend\src\main\java\com\example\app\repository\PaperQuesti
 E:\test\vue_project\backend\src\main\java\com\example\app\security\JwtUtil.java
 E:\test\vue_project\backend\src\main\java\com\example\app\entity\SysUser.java
 E:\test\vue_project\backend\src\main\java\com\example\app\controller\QuestionController.java
+E:\test\vue_project\backend\src\main\java\com\example\app\dto\ChangePasswordRequest.java
 E:\test\vue_project\backend\src\main\java\com\example\app\repository\QuestionRepository.java
 E:\test\vue_project\backend\src\main\java\com\example\app\dto\QuestionReviewDTO.java
 E:\test\vue_project\backend\src\main\java\com\example\app\repository\ExamRecordRepository.java

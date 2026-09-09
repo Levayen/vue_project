@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report-3.0.xsd" version="3.0" name="com.example.app.security.JwtUtilTest" time="1.347" tests="4" errors="0" skipped="0" failures="0">
+<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report-3.0.xsd" version="3.0" name="com.example.app.config.DataInitializerTest" time="0.115" tests="2" errors="0" skipped="0" failures="0">
   <properties>
     <property name="java.specification.version" value="26"/>
     <property name="sun.cpu.isalist" value="amd64"/>
@@ -59,8 +59,6 @@
     <property name="sun.io.unicode.encoding" value="UnicodeLittle"/>
     <property name="java.class.version" value="70.0"/>
   </properties>
-  <testcase name="tamperedTokenRejected" classname="com.example.app.security.JwtUtilTest" time="0.228"/>
-  <testcase name="expiredTokenRejected" classname="com.example.app.security.JwtUtilTest" time="1.105"/>
-  <testcase name="tokenSignedWithAnotherSecretRejected" classname="com.example.app.security.JwtUtilTest" time="0.003"/>
-  <testcase name="generateAndParseRoundTrip" classname="com.example.app.security.JwtUtilTest" time="0.003"/>
+  <testcase name="randomPasswordsAreDistinct" classname="com.example.app.config.DataInitializerTest" time="0.086"/>
+  <testcase name="randomPasswordMeetsStrength" classname="com.example.app.config.DataInitializerTest" time="0.009"/>
 </testsuite>

@@ -93,8 +93,7 @@ function routeAvailableFor(path: string, role: Role): boolean {
       </el-form>
 
       <div class="login-tips">
-        <p>演示账号：admin / admin123（管理员）</p>
-        <p>teacher / teacher123（教师）· 学号 / student123（学生）</p>
+        <p>账号由管理员统一开通，初始密码将在首次登录时提示修改</p>
       </div>
     </div>
   </div>

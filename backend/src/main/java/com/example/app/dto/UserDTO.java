@@ -12,7 +12,8 @@ public record UserDTO(
         String username,
         UserRole role,
         Long studentId,
-        Boolean enabled
+        Boolean enabled,
+        Boolean mustChangePassword
 ) {
     public static UserDTO from(SysUser user) {
         return new UserDTO(
@@ -20,7 +21,8 @@ public record UserDTO(
                 user.getUsername(),
                 user.getRole(),
                 user.getStudentId(),
-                user.getEnabled()
+                user.getEnabled(),
+                Boolean.TRUE.equals(user.getMustChangePassword())
         );
     }
 }

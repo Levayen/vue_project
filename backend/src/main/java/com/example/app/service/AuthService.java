@@ -59,4 +59,27 @@ public class AuthService {
         }
         return UserDTO.from(user);
     }
+
+    /**
+     * 修改当前用户密码（Issue1：种子账号首次登录强制改密 / 用户自助改密）。
+     * 校验原密码；新密码不得与原密码相同；成功后清除 mustChangePassword 标记。
+     * 密码不打日志。
+     */
+    public UserDTO changePassword(Long userId, String oldPassword, String newPassword) {
+        SysUser user = userRepository.findById(userId)
+                .orElseThrow(() -> BusinessException.unauthorized("用户不存在或已失效"));
+        if (!Boolean.TRUE.equals(user.getEnabled())) {
+            throw BusinessException.forbidden("账号已停用，请联系管理员");
+        }
+        if (!passwordEncoder.matches(oldPassword, user.getPasswordHash())) {
+            throw BusinessException.badRequest("原密码不正确");
+        }
+        if (newPassword.equals(oldPassword)) {
+            throw BusinessException.badRequest("新密码不能与原密码相同");
+        }
+        user.setPasswordHash(passwordEncoder.encode(newPassword));
+        user.setMustChangePassword(false);
+        userRepository.save(user);
+        return UserDTO.from(user);
+    }
 }

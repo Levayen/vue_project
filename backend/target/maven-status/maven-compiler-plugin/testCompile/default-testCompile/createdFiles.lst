@@ -1,12 +1,13 @@
-com\example\app\service\ExamServiceTest.class
 com\example\app\service\AnswerMatcherTest.class
 com\example\app\service\AttemptServiceTest.class
 com\example\app\service\PaperServiceTest.class
-com\example\app\service\QuestionServiceTest.class
 com\example\app\service\ReviewServiceTest.class
 com\example\app\service\ExamStatsServiceTest.class
+com\example\app\service\AuthServiceTest.class
+com\example\app\service\ResultServiceTest.class
+com\example\app\service\ExamServiceTest.class
+com\example\app\config\DataInitializerTest.class
+com\example\app\service\QuestionServiceTest.class
 com\example\app\security\JwtUtilTest.class
 com\example\app\service\GradingServiceTest.class
-com\example\app\service\AuthServiceTest.class
 com\example\app\service\PaperGenerateServiceTest.class
-com\example\app\service\ResultServiceTest.class

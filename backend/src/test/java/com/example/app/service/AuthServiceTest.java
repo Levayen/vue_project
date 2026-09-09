@@ -1,6 +1,7 @@
 package com.example.app.service;
 
 import com.example.app.dto.LoginResponse;
+import com.example.app.dto.UserDTO;
 import com.example.app.entity.SysUser;
 import com.example.app.entity.UserRole;
 import com.example.app.exception.BusinessException;
@@ -17,6 +18,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 /**
@@ -94,5 +96,64 @@ class AuthServiceTest {
         when(userRepository.findById(1L)).thenReturn(Optional.of(user("admin", UserRole.ADMIN, true)));
 
         assertEquals("admin", authService.currentUser(1L).username());
+    }
+
+    @Test
+    void loginExposesMustChangePasswordFlag() {
+        SysUser u = user("admin", UserRole.ADMIN, true);
+        u.setMustChangePassword(true);
+        when(userRepository.findByUsername("admin")).thenReturn(Optional.of(u));
+        when(passwordEncoder.matches("admin123", "hash")).thenReturn(true);
+
+        LoginResponse response = authService.login("admin", "admin123");
+
+        assertTrue(response.user().mustChangePassword());
+    }
+
+    @Test
+    void changePasswordSuccessClearsFlag() {
+        SysUser u = user("student", UserRole.STUDENT, true);
+        u.setMustChangePassword(true);
+        when(userRepository.findById(1L)).thenReturn(Optional.of(u));
+        when(passwordEncoder.matches("oldPass1", "hash")).thenReturn(true);
+        when(passwordEncoder.encode("newPass2")).thenReturn("newHash");
+
+        UserDTO result = authService.changePassword(1L, "oldPass1", "newPass2");
+
+        assertFalse(result.mustChangePassword());
+        assertEquals("newHash", u.getPasswordHash());
+        assertFalse(u.getMustChangePassword());
+        verify(userRepository).save(u);
+    }
+
+    @Test
+    void changePasswordWithWrongOldPasswordRejected() {
+        when(userRepository.findById(1L)).thenReturn(Optional.of(user("admin", UserRole.ADMIN, true)));
+        when(passwordEncoder.matches("bad", "hash")).thenReturn(false);
+
+        BusinessException ex = assertThrows(BusinessException.class,
+                () -> authService.changePassword(1L, "bad", "newPass2"));
+        assertEquals(HttpStatus.BAD_REQUEST, ex.getStatus());
+        assertEquals("原密码不正确", ex.getMessage());
+    }
+
+    @Test
+    void changePasswordSameAsOldRejected() {
+        when(userRepository.findById(1L)).thenReturn(Optional.of(user("admin", UserRole.ADMIN, true)));
+        when(passwordEncoder.matches("same1", "hash")).thenReturn(true);
+
+        BusinessException ex = assertThrows(BusinessException.class,
+                () -> authService.changePassword(1L, "same1", "same1"));
+        assertEquals(HttpStatus.BAD_REQUEST, ex.getStatus());
+        assertEquals("新密码不能与原密码相同", ex.getMessage());
+    }
+
+    @Test
+    void changePasswordForDisabledAccountRejected() {
+        when(userRepository.findById(1L)).thenReturn(Optional.of(user("admin", UserRole.ADMIN, false)));
+
+        BusinessException ex = assertThrows(BusinessException.class,
+                () -> authService.changePassword(1L, "x", "newPass2"));
+        assertEquals(HttpStatus.FORBIDDEN, ex.getStatus());
     }
 }
